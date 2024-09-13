@@ -1,27 +1,69 @@
-# EcommerceProductCrudPages
+#### Angular Routing
+New commands in angular:
+##### Task 1: Create module without routing file
+   
+```bash
+ng generate module user
+```
+  (or)
+```bash
+ng g m user
+```
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.0.
+##### Task 2: Create components in that module
+```bash
+ng g c user/add-user
+ng g c user/list-user
+```
 
-## Development server
+##### Task 3: Create module with routing
+```bash
+ng g m payment --routing
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+##### Reference
 
-## Code scaffolding
+```ts
+import { Routes } from '@angular/router';
+import { AddProductComponent } from './products/add-product/add-product.component';
+import { ListProductComponent } from './products/list-product/list-product.component';
+import { ViewProductComponent } from './products/view-product/view-product.component';
+import { EditProductComponent } from './products/edit-product/edit-product.component';
+import { ListUserComponent } from './user/list-user/list-user.component';
+import { ViewUserComponent } from './user/view-user/view-user.component';
+import { EditUserComponent } from './user/edit-user/edit-user.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+export const routes: Routes = [
 
-## Build
+  // { path: 'products/add', component: AddProductComponent },
+  // { path: 'products/list', component: ListProductComponent },
+  // { path: 'products/P1', component: ViewProductComponent },
+  // { path: 'products/P1/edit', component: EditProductComponent },
+  // { path: '', redirectTo: '/products/list', pathMatch: 'full' }
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+  {
+    path: 'products',
+    children: [
+      { path: '', component: ListProductComponent },
+      { path: 'add', component: AddProductComponent },
+      { path: 'P1', component: ViewProductComponent },
+      { path: 'P1/edit', component: EditProductComponent },
+    ]
+  },
+  {
+    path: 'users', children: [
+      { path: '', component: ListUserComponent },
+      { path: 'U1', component: ViewUserComponent },
+      { path: 'U1/edit', component: EditUserComponent }
+    ]
+  },
+  { path: '', redirectTo: '/products/list', pathMatch: 'full' },
+  { path: 'orders', loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule) },
+  { path: 'payments', loadChildren: () => import('./payment/payment.module').then(m => m.PaymentModule) },
+  { path: '**', component: PageNotFoundComponent }
+];
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+// Performance tuning
+// Lazy loading - load the module and its childs pages only if any one user requested the page
+```
